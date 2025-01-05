@@ -3,8 +3,8 @@ from yt_dlp import YoutubeDL
 
 urls = ['https://youtu.be/jhgVu2lsi_k']
 
-with YoutubeDL() as ydl:
-    ydl.download(urls)
+#with YoutubeDL() as ydl:
+#    ydl.download(urls)
     
 #command
 # yt-dlp -P 'E:\Shaarav\wastebin\' -o '%(title)s - %(channel)s' -x --audio-format 'm4a' 
