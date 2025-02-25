@@ -7,5 +7,7 @@ urls = ['https://youtu.be/jhgVu2lsi_k']
 #    ydl.download(urls)
     
 #command
+
+#PS D:\Projects\Apollo> .\venv\bin\activate
 # yt-dlp -P 'E:\Shaarav\wastebin\' -o '%(title)s - %(channel)s' -x --audio-format 'm4a' 
 # --ffmpeg-location 'C:\ffmpeg' https://www.youtube.com/playlist?list=PLIRFSUH_WlMrZhbyDNoK9o9mNW9XlPXs2
