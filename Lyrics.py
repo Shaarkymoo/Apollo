@@ -1,6 +1,5 @@
 import lyricsgenius
 import eyed3
-import musixmatch
 from pprint import pprint
 import os
 
