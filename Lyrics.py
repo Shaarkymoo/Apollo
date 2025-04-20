@@ -26,7 +26,7 @@ def search_lyrics(object,query):
     #print(song.lyrics)
     return song
 
-def update_songs():
+def update_songs(genius_obj):
     loc = 'E:\\Shaarav\\playlists\\old rock\\'
     songlist = []
     errors = []
@@ -35,7 +35,7 @@ def update_songs():
         songlist.append(a)
         print(a)
         try:
-            song_object = search_lyrics(genius_setup(), a)
+            song_object = search_lyrics(genius_obj, a)
             #print(song_object)
             songfile = eyed3.load(loc+a+'.mp3')
             if songfile.tag is None:
@@ -56,5 +56,6 @@ def update_songs():
 #pprint(vars(test_1))
 #print(test_1.lyrics)
 
-update_songs()
+genius_object = genius_setup()
+update_songs(genius_object)
 
