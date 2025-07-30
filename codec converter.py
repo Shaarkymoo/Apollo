@@ -6,9 +6,9 @@ a = os.listdir('E:\\Shaarav\\wastebin\\')
 errors = []
 for b in a:
     print(b)
-    if '.webm' in b:
+    if '.m4a' in b:
         old_file = 'E:\\Shaarav\\wastebin\\' + b
-        b = b.replace('.webm','.mp4')
+        b = b.replace('.m4a','.mp3')
         new_file = 'E:\\Shaarav\\music\\' + b
         try:
             ff = FFmpeg(
