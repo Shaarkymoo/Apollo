@@ -27,7 +27,7 @@ def search_lyrics(object,query):
     return song
 
 def update_songs(genius_obj):
-    loc = 'E:\\Shaarav\\playlists\\iron\\'
+    loc = 'E:\\Shaarav\\playlists\\lovely\\'
     songlist = []
     errors = []
     for a in os.listdir(loc):
