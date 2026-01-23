@@ -68,7 +68,7 @@ def search_lyrics(genius_obj, query):
     return song  # may be None
 
 def update_songs(genius_obj):
-    loc = 'song_location/'
+    loc = r'E:\Shaarav\playlists\balanced'
     errors = []
 
     processed = load_processed()
