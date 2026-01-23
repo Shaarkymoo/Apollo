@@ -57,7 +57,7 @@ def search_lyrics(object,query):
     return song
 
 def update_songs(genius_obj):
-    loc = 'song_location/'
+    loc = 'E:/Shaarav/playlists/despresso/'
     errors = []
 
     for filename in os.listdir(loc):
