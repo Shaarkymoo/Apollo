@@ -57,29 +57,39 @@ def search_lyrics(object,query):
     return song
 
 def update_songs(genius_obj):
-    loc = 'E:\\Shaarav\\playlists\\sombre-lowEnergy\\'
-    songlist = []
+    loc = 'song_location/'
     errors = []
-    for a in os.listdir(loc):
-        a = a.replace('.mp3','')
-        songlist.append(a)
-        print(a)
+
+    for filename in os.listdir(loc):
+        if not filename.endswith(".mp3"):
+            continue
+
+        song_name = filename.replace(".mp3", "")
+        print(f"Processing: {song_name}")
+
         try:
-            song_object = search_lyrics(genius_obj, a)
-            #print(song_object)
-            songfile = eyed3.load(loc+a+'.mp3')
+            song_object = search_lyrics(genius_obj, song_name)
+            if song_object is None:
+                raise Exception("No lyrics found")
+
+            reviewed_lyrics = review_lyrics_in_vscode(
+                song_name,
+                song_object.lyrics
+            )
+
+            songfile = eyed3.load(os.path.join(loc, filename))
             if songfile.tag is None:
                 songfile.initTag()
-            songfile.tag.lyrics.set(song_object.lyrics)
-            songfile.tag.save()
-        except Exception as e:
-            print(e)
-            errors.append(a)
-    print("loop is done \n\n\n ")
-    print(errors)
-    print(len(errors))
-    return a
 
+            songfile.tag.lyrics.set(reviewed_lyrics)
+            songfile.tag.save()
+
+        except Exception as e:
+            print("Error:", e)
+            errors.append(song_name)
+
+    print("\nDone.")
+    print("Errors:", errors)
 
 #print("start")
 #test_1 = search_lyrics(genius_setup(), update_songs())
