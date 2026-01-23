@@ -1,6 +1,5 @@
 import lyricsgenius
 import eyed3
-from pprint import pprint
 import os
 import tempfile
 import subprocess
@@ -8,15 +7,22 @@ import subprocess
 VSCODE_PATH = r"D:\Microsoft VS Code\Code.exe"
 PROCESSED_FILE = r"D:\Projects\Apollo\processed_songs.txt"
 
+
+# ------------------ checkpoint helpers ------------------
+
 def load_processed():
     if not os.path.exists(PROCESSED_FILE):
         return set()
     with open(PROCESSED_FILE, "r", encoding="utf-8") as f:
         return set(line.strip() for line in f if line.strip())
 
+
 def mark_processed(filename):
     with open(PROCESSED_FILE, "a", encoding="utf-8") as f:
         f.write(filename + "\n")
+
+
+# ------------------ editor review ------------------
 
 def review_lyrics_in_vscode(song_name, lyrics):
     with tempfile.NamedTemporaryFile(
@@ -26,9 +32,7 @@ def review_lyrics_in_vscode(song_name, lyrics):
         encoding="utf-8"
     ) as tf:
         tf.write(f"# Song: {song_name}\n")
-        tf.write("# Genius returned no lyrics.\n" if not lyrics else "# Review the lyrics below.\n")
-        tf.write("# Paste or edit lyrics, then close this file to continue.\n\n")
-
+        tf.write("# Edit lyrics below. Close file to continue.\n\n")
         if lyrics:
             tf.write(lyrics)
 
@@ -46,26 +50,41 @@ def review_lyrics_in_vscode(song_name, lyrics):
     return final_lyrics
 
 
-def genius_setup(): 
+# ------------------ genius setup ------------------
+
+def genius_setup():
     client_id = 'FYST0CoaHDYMbCMzDsbM2ze6lHCBD7nl5X3IknYGsSmWj3nvgLdLjBaCKpaWLBRE'
     client_secret = 'O9R4odQExaVokhgEDT6-bnEHO79JJdcrzoknYnv3L0k8d0Ryr3WuwfXK7fRpq2q2jfZ_zqywfDM-7LdPhLBkLQ'
     client_token = 'mF3AF4cXWIi-jKzvn8pUyXGMOtVgXqlTmF-gO7Ax72pSssZZTVViwxWKML0y_FCM'
-
     genius = lyricsgenius.Genius(client_token)
-    genius.verbose = False # Turn off status messages
-    genius.remove_section_headers = False # Remove section headers (e.g. [Chorus]) from lyrics when searching
-    genius.skip_non_songs = True # Include hits thought to be non-songs (e.g. track lists)
-    #genius.excluded_terms = ["(Remix)", "(Live)"] # Exclude songs with these words in their title
-    genius.response_format = 'plain'
+    genius.verbose = False
+    genius.remove_section_headers = False
+    genius.skip_non_songs = True
+    genius.response_format = "plain"
     return genius
+
+
+def search_lyrics(genius_obj, query):
+    return genius_obj.search_song(query)
 
 def musixmatch_setup():
     apikey = '8878031489eee173a7cdf0fcb909b869'
-    return
+    return 
 
-def search_lyrics(genius_obj, query):
-    song = genius_obj.search_song(query)
-    return song  # may be None
+
+# ------------------ core logic ------------------
+
+def get_existing_lyrics(songfile):
+    """
+    Returns lyrics from MP3 tag if present, else None
+    """
+    if songfile.tag and songfile.tag.lyrics:
+        text = songfile.tag.lyrics[0].text
+        if text and text.strip():
+            return text.strip()
+    return None
+
+
 
 def update_songs(genius_obj):
     loc = r'E:\Shaarav\playlists\balanced'
@@ -78,31 +97,41 @@ def update_songs(genius_obj):
             continue
 
         if filename in processed:
-            print(f"Skipping (already done): {filename}")
+            print(f"Skipping (already processed): {filename}")
             continue
 
-        song_name = filename.replace(".mp3", "")
+        song_name = filename[:-4]
         print(f"Processing: {song_name}")
 
         try:
-            song_object = search_lyrics(genius_obj, song_name)
-            lyrics = song_object.lyrics if song_object else None
+            path = os.path.join(loc, filename)
+            songfile = eyed3.load(path)
 
+            if songfile.tag is None:
+                songfile.initTag()
+
+            # 1️⃣ try existing lyrics first
+            lyrics = get_existing_lyrics(songfile)
+
+            # 2️⃣ only hit Genius if empty
+            if not lyrics:
+                print("→ No existing lyrics, querying Genius")
+                song_object = search_lyrics(genius_obj, song_name)
+                lyrics = song_object.lyrics if song_object else None
+            else:
+                print("→ Using existing embedded lyrics")
+
+            # 3️⃣ review step (always)
             reviewed_lyrics = review_lyrics_in_vscode(song_name, lyrics)
 
             if not reviewed_lyrics:
-                print("No lyrics provided, skipping embed.")
+                print("No lyrics provided, skipping.")
                 errors.append(song_name)
                 continue
-
-            songfile = eyed3.load(os.path.join(loc, filename))
-            if songfile.tag is None:
-                songfile.initTag()
 
             songfile.tag.lyrics.set(reviewed_lyrics)
             songfile.tag.save()
 
-            # ✅ mark success ONLY after saving
             mark_processed(filename)
 
         except Exception as e:
@@ -113,6 +142,7 @@ def update_songs(genius_obj):
     print("Skipped / errors:", errors)
 
 
+# ------------------ run ------------------
 
 #print("start")
 #test_1 = search_lyrics(genius_setup(), update_songs())
@@ -122,4 +152,3 @@ def update_songs(genius_obj):
 
 genius_object = genius_setup()
 update_songs(genius_object)
-
