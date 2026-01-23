@@ -5,6 +5,8 @@ import os
 import tempfile
 import subprocess
 
+VSCODE_PATH = r"D:\Microsoft VS Code\Code.exe"
+
 def review_lyrics_in_vscode(song_name, lyrics):
     with tempfile.NamedTemporaryFile(
         mode="w+",
@@ -19,7 +21,7 @@ def review_lyrics_in_vscode(song_name, lyrics):
         temp_path = tf.name
 
     # Open in VS Code and WAIT until closed
-    subprocess.run(["code", "--wait", temp_path])
+    subprocess.run([VSCODE_PATH, "--wait", temp_path])
 
     # Read edited lyrics back
     with open(temp_path, "r", encoding="utf-8") as f:
