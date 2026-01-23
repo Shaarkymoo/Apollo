@@ -6,6 +6,17 @@ import tempfile
 import subprocess
 
 VSCODE_PATH = r"D:\Microsoft VS Code\Code.exe"
+PROCESSED_FILE = r"D:\Projects\Apollo\processed_songs.txt"
+
+def load_processed():
+    if not os.path.exists(PROCESSED_FILE):
+        return set()
+    with open(PROCESSED_FILE, "r", encoding="utf-8") as f:
+        return set(line.strip() for line in f if line.strip())
+
+def mark_processed(filename):
+    with open(PROCESSED_FILE, "a", encoding="utf-8") as f:
+        f.write(filename + "\n")
 
 def review_lyrics_in_vscode(song_name, lyrics):
     with tempfile.NamedTemporaryFile(
@@ -15,19 +26,19 @@ def review_lyrics_in_vscode(song_name, lyrics):
         encoding="utf-8"
     ) as tf:
         tf.write(f"# Song: {song_name}\n")
-        tf.write("# Edit the lyrics below if needed.\n")
-        tf.write("# Close this file to continue.\n\n")
-        tf.write(lyrics or "")
+        tf.write("# Genius returned no lyrics.\n" if not lyrics else "# Review the lyrics below.\n")
+        tf.write("# Paste or edit lyrics, then close this file to continue.\n\n")
+
+        if lyrics:
+            tf.write(lyrics)
+
         temp_path = tf.name
 
-    # Open in VS Code and WAIT until closed
-    subprocess.run([VSCODE_PATH, "--wait", temp_path])
+    subprocess.run(["code", "--reuse-window", "--wait", temp_path])
 
-    # Read edited lyrics back
     with open(temp_path, "r", encoding="utf-8") as f:
         lines = f.readlines()
 
-    # Remove comment lines
     final_lyrics = "".join(
         line for line in lines if not line.startswith("#")
     ).strip()
@@ -52,18 +63,22 @@ def musixmatch_setup():
     apikey = '8878031489eee173a7cdf0fcb909b869'
     return
 
-def search_lyrics(object,query):
-    #searchquery = str(input(query))
-    song = object.search_song(query)
-    #print(song.lyrics)
-    return song
+def search_lyrics(genius_obj, query):
+    song = genius_obj.search_song(query)
+    return song  # may be None
 
 def update_songs(genius_obj):
-    loc = 'E:/Shaarav/playlists/despresso/'
+    loc = 'song_location/'
     errors = []
+
+    processed = load_processed()
 
     for filename in os.listdir(loc):
         if not filename.endswith(".mp3"):
+            continue
+
+        if filename in processed:
+            print(f"Skipping (already done): {filename}")
             continue
 
         song_name = filename.replace(".mp3", "")
@@ -71,13 +86,14 @@ def update_songs(genius_obj):
 
         try:
             song_object = search_lyrics(genius_obj, song_name)
-            if song_object is None:
-                raise Exception("No lyrics found")
+            lyrics = song_object.lyrics if song_object else None
 
-            reviewed_lyrics = review_lyrics_in_vscode(
-                song_name,
-                song_object.lyrics
-            )
+            reviewed_lyrics = review_lyrics_in_vscode(song_name, lyrics)
+
+            if not reviewed_lyrics:
+                print("No lyrics provided, skipping embed.")
+                errors.append(song_name)
+                continue
 
             songfile = eyed3.load(os.path.join(loc, filename))
             if songfile.tag is None:
@@ -86,12 +102,17 @@ def update_songs(genius_obj):
             songfile.tag.lyrics.set(reviewed_lyrics)
             songfile.tag.save()
 
+            # ✅ mark success ONLY after saving
+            mark_processed(filename)
+
         except Exception as e:
             print("Error:", e)
             errors.append(song_name)
 
     print("\nDone.")
-    print("Errors:", errors)
+    print("Skipped / errors:", errors)
+
+
 
 #print("start")
 #test_1 = search_lyrics(genius_setup(), update_songs())
