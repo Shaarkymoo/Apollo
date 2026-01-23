@@ -2,6 +2,36 @@ import lyricsgenius
 import eyed3
 from pprint import pprint
 import os
+import tempfile
+import subprocess
+
+def review_lyrics_in_vscode(song_name, lyrics):
+    with tempfile.NamedTemporaryFile(
+        mode="w+",
+        suffix=".txt",
+        delete=False,
+        encoding="utf-8"
+    ) as tf:
+        tf.write(f"# Song: {song_name}\n")
+        tf.write("# Edit the lyrics below if needed.\n")
+        tf.write("# Close this file to continue.\n\n")
+        tf.write(lyrics or "")
+        temp_path = tf.name
+
+    # Open in VS Code and WAIT until closed
+    subprocess.run(["code", "--wait", temp_path])
+
+    # Read edited lyrics back
+    with open(temp_path, "r", encoding="utf-8") as f:
+        lines = f.readlines()
+
+    # Remove comment lines
+    final_lyrics = "".join(
+        line for line in lines if not line.startswith("#")
+    ).strip()
+
+    return final_lyrics
+
 
 def genius_setup(): 
     client_id = 'FYST0CoaHDYMbCMzDsbM2ze6lHCBD7nl5X3IknYGsSmWj3nvgLdLjBaCKpaWLBRE'
