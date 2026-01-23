@@ -34,7 +34,7 @@ def review_lyrics_in_vscode(song_name, lyrics):
 
         temp_path = tf.name
 
-    subprocess.run(["code", "--reuse-window", "--wait", temp_path])
+    subprocess.run([VSCODE_PATH, "--reuse-window", "--wait", temp_path])
 
     with open(temp_path, "r", encoding="utf-8") as f:
         lines = f.readlines()
