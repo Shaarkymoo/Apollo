@@ -7,7 +7,6 @@ import subprocess
 VSCODE_PATH = r"D:\Microsoft VS Code\Code.exe"
 PROCESSED_FILE = r"D:\Projects\Apollo\processed_songs.txt"
 
-
 # ------------------ checkpoint helpers ------------------
 
 def load_processed():
