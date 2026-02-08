@@ -86,7 +86,7 @@ def get_existing_lyrics(songfile):
 
 
 def update_songs(genius_obj):
-    loc = r'E:\Shaarav\playlists\hiphop'
+    loc = r'E:\Shaarav\playlists\iron'
     errors = []
 
     processed = load_processed()
