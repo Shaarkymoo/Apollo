@@ -1,1 +1,1 @@
-CreateObject("WScript.Shell").Run "python D:\Projects\Apollo\vlcshort.py", 0, False
+CreateObject("WScript.Shell").Run "D:/Nvidia/MiniConda/envs/regularshizz/python.exe d:/Projects/Apollo/vlcshort.py", 0, False
