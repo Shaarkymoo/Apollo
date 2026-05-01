@@ -1,0 +1,1 @@
+CreateObject("WScript.Shell").Run "python D:\Projects\Apollo\vlcshort.py", 0, False
