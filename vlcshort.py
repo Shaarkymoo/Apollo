@@ -11,10 +11,10 @@ def prev_track():
     requests.get(VLC_URL, params={"command": "pl_previous"}, auth=("", VLC_PASSWORD))
 
 def seek_forward():
-    requests.get(VLC_URL, params={"command": "seek", "val": "+5S"}, auth=("", VLC_PASSWORD))
+    requests.get(VLC_URL, params={"command": "seek", "val": "+10S"}, auth=("", VLC_PASSWORD))
 
 def seek_backward():
-    requests.get(VLC_URL, params={"command": "seek", "val": "-5S"}, auth=("", VLC_PASSWORD))
+    requests.get(VLC_URL, params={"command": "seek", "val": "-10S"}, auth=("", VLC_PASSWORD))
 
 def play_pause():
     requests.get(VLC_URL, params={"command": "pl_pause"}, auth=("", VLC_PASSWORD))
