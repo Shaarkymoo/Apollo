@@ -25,11 +25,17 @@ def toggle_random():
 # def next_track():
 #     requests.get(VLC_URL, params={"command": "pl_next"}, auth=("", VLC_PASSWORD))
 
+# def next_track():
+#     requests.get(VLC_URL, params={"command": "pl_next"}, auth=("", VLC_PASSWORD))
+
+# def next_track():
+#     requests.get(VLC_URL, params={"command": "pl_next"}, auth=("", VLC_PASSWORD))
+
 keyboard.block_key("F4")  # block F4 to prevent conflicts
 keyboard.add_hotkey("F4+num 9", next_track, suppress=True)
 keyboard.add_hotkey("F4+num 8", toggle_random, suppress=True)
 keyboard.add_hotkey("F4+num 7", prev_track, suppress=True)
 keyboard.add_hotkey("F4+num 6", seek_forward, suppress=True)
-keyboard.add_hotkey("F4+num 4", seek_backward, suppress=True)
 keyboard.add_hotkey("F4+num 5", play_pause, suppress=True)
+keyboard.add_hotkey("F4+num 4", seek_backward, suppress=True)
 keyboard.wait()
