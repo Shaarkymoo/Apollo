@@ -44,7 +44,7 @@ def close_window():
 # def next_track():
 #     requests.get(VLC_URL, params={"command": "pl_next"}, auth=("", VLC_PASSWORD))
 
-#keyboard.block_key("F4")  # block F4 to prevent conflicts
+keyboard.block_key("F4")  # block F4 to prevent conflicts
 #keyboard.add_hotkey("alt+F4", close_window, suppress=True)
 keyboard.add_hotkey("F4+num 9", next_track, suppress=True)
 keyboard.add_hotkey("F4+num 8", toggle_random, suppress=True)
