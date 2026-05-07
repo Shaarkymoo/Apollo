@@ -6,9 +6,11 @@ VLC_PASSWORD = "vlc"  # change to whatever you set
 VLC_URL = "http://localhost:22123/requests/status.xml"
 
 def next_track():
+    print("Next track")
     requests.get(VLC_URL, params={"command": "pl_next"}, auth=("", VLC_PASSWORD))
 
 def prev_track():
+    print("Previous track")
     requests.get(VLC_URL, params={"command": "pl_previous"}, auth=("", VLC_PASSWORD))
 
 def seek_forward():
