@@ -50,10 +50,10 @@ def close_window():
 
 #keyboard.block_key("right alt")  # block F4 to prevent conflicts
 #keyboard.add_hotkey("alt+F4", close_window, suppress=True)
-keyboard.add_hotkey("ralt+num 9", next_track, suppress=True)
-keyboard.add_hotkey("ralt+num 8", toggle_random, suppress=True)
-keyboard.add_hotkey("ralt+num 7", prev_track, suppress=True)
-keyboard.add_hotkey("ralt+num 6", seek_forward, suppress=True)
-keyboard.add_hotkey("ralt+num 5", play_pause, suppress=True)
-keyboard.add_hotkey("ralt+num 4", seek_backward, suppress=True)
+keyboard.add_hotkey("right alt+num 9", next_track, suppress=True)
+keyboard.add_hotkey("right alt+num 8", toggle_random, suppress=True)
+keyboard.add_hotkey("right alt+num 7", prev_track, suppress=True)
+keyboard.add_hotkey("right alt+num 6", seek_forward, suppress=True)
+keyboard.add_hotkey("right alt+num 5", play_pause, suppress=True)
+keyboard.add_hotkey("right alt+num 4", seek_backward, suppress=True)
 keyboard.wait()
