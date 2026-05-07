@@ -14,15 +14,19 @@ def prev_track():
     requests.get(VLC_URL, params={"command": "pl_previous"}, auth=("", VLC_PASSWORD))
 
 def seek_forward():
+    print("Seeking forward")
     requests.get(VLC_URL, params={"command": "seek", "val": "+10S"}, auth=("", VLC_PASSWORD))
 
 def seek_backward():
+    print("Seeking backward")
     requests.get(VLC_URL, params={"command": "seek", "val": "-10S"}, auth=("", VLC_PASSWORD))
 
 def play_pause():
+    print("Toggling play/pause")
     requests.get(VLC_URL, params={"command": "pl_pause"}, auth=("", VLC_PASSWORD))
 
 def toggle_random():
+    print("Toggling random")
     requests.get(VLC_URL, params={"command": "pl_random"}, auth=("", VLC_PASSWORD))
 
 def close_window():
