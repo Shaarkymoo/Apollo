@@ -10,7 +10,7 @@ def next_track():
     requests.get(VLC_URL, params={"command": "pl_next"}, auth=("", VLC_PASSWORD))
 
 def prev_track():
-    #print("Previous track")
+#   print("Previous track")
     requests.get(VLC_URL, params={"command": "pl_previous"}, auth=("", VLC_PASSWORD))
 
 def seek_forward():
@@ -29,11 +29,7 @@ def toggle_random():
     #print("Toggling random")
     requests.get(VLC_URL, params={"command": "pl_random"}, auth=("", VLC_PASSWORD))
 
-def close_window():
-    ctypes.windll.user32.PostMessageW(
-        ctypes.windll.user32.GetForegroundWindow(), 
-        0x0010, 0, 0  # WM_CLOSE message
-    )
+
 
 # def next_track():
 #     requests.get(VLC_URL, params={"command": "pl_next"}, auth=("", VLC_PASSWORD))
@@ -44,7 +40,7 @@ def close_window():
 # def next_track():
 #     requests.get(VLC_URL, params={"command": "pl_next"}, auth=("", VLC_PASSWORD))
 
-keyboard.block_key("F4")  # block F4 to prevent conflicts
+#keyboard.block_key("F4")  # block F4 to prevent conflicts
 #keyboard.add_hotkey("alt+F4", close_window, suppress=True)
 keyboard.add_hotkey("F4+num 9", next_track, suppress=True)
 keyboard.add_hotkey("F4+num 8", toggle_random, suppress=True)
@@ -62,4 +58,3 @@ keyboard.wait()
 # keyboard.add_hotkey("altgr+num 6", seek_forward, suppress=True)
 # keyboard.add_hotkey("altgr+num 5", play_pause, suppress=True)
 # keyboard.add_hotkey("altgr+num 4", seek_backward, suppress=True)
-# keyboard.wait()
