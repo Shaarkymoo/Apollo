@@ -1,0 +1,14 @@
+# Apollo runtime dependencies
+pygame
+pytube
+pafy
+youtube-dl
+ffmpy
+lyricsgenius
+eyed3
+google-api-python-client
+spotipy
+youtube_search
+yt-dlp
+click
+pillow
