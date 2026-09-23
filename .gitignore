@@ -1,0 +1,35 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# --- Local tooling / editor ---
+.vscode/
+.omo/
+.idea/
+
+# --- Tooling state ---
+.codegraph/
+
+# --- Personal data & reports (not published) ---
+processed_songs.txt
+processed_songs.txt.bak
+processed - no lyrics.txt
+processed - unfound.txt
+dupes-report.html
+links.txt
+vlcrequests.txt
+songbpm.txt
+*.csv
+
+# --- Local automation (not published) ---
+auto_commit.ps1
+
+# --- Spotify playlist ripper (DMCA risk, kept local only) ---
+spotify playlist.py
+
+# --- Cookies / credentials ---
+--ffmpeg-location
+*.cookies
+cookies.txt
