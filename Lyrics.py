@@ -174,6 +174,9 @@ def update_songs_with_markers(genius_obj):
         * "."          -> saved to the file, recorded in processed - no lyrics.txt
         * "*"          -> saved to the file, recorded in processed - unfound.txt
         * empty        -> nothing saved, nothing recorded (added to errors)
+    - If a name is already recorded but that copy has no embedded lyrics
+      (duplicate under a different folder), it is still processed and saved,
+      but the name is NOT recorded again anywhere.
     """
     loc = MUSIC_LOC
     errors = []
@@ -183,9 +186,19 @@ def update_songs_with_markers(genius_obj):
     unfound = load_list(UNFOUND_FILE)
 
     for path, filename in iter_mp3_files(loc):
-        if filename in processed or filename in no_lyrics or filename in unfound:
-            print(f"Skipping (already handled): {filename}")
-            continue
+        recorded = filename in processed or filename in no_lyrics or filename in unfound
+
+        duplicate = False
+        if recorded:
+            try:
+                already = get_existing_lyrics(eyed3.load(path))
+            except Exception:
+                already = None
+            if already:
+                print(f"Skipping (already handled): {filename}")
+                continue
+            duplicate = True
+            print(f"Duplicate with no lyrics — processing (will not be recorded): {filename}")
 
         song_name = filename[:-4]
         print(f"Processing: {song_name}")
@@ -219,8 +232,11 @@ def update_songs_with_markers(genius_obj):
             songfile.tag.lyrics.set(reviewed_lyrics)
             songfile.tag.save()
 
-            # 5️⃣ record in the matching checkpoint file
-            if reviewed_lyrics == ".":
+            # 5️⃣ record in the matching checkpoint file — except for duplicates,
+            #    whose name is already recorded somewhere.
+            if duplicate:
+                print("→ Duplicate: lyrics saved to file, name not recorded anywhere")
+            elif reviewed_lyrics == ".":
                 print("→ '.' saved — recording in processed - no lyrics")
                 mark_in(NO_LYRICS_FILE, filename)
             elif reviewed_lyrics == "*":
