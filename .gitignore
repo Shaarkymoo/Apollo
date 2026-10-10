@@ -33,3 +33,8 @@ spotify playlist.py
 --ffmpeg-location
 *.cookies
 cookies.txt
+
+# --- Environment / secrets (never commit) ---
+.env
+.env.*
+!.env.example

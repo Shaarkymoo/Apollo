@@ -14,6 +14,13 @@ import datetime
 import csv
 import pafy
 
+# Load local API credentials from .env (gitignored)
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 stuff_font = ("Comfortaa", 11)
 
 # color

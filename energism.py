@@ -10,6 +10,13 @@ import csv
 import shutil
 import pandas
 
+# Load local API credentials from .env (gitignored)
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 def connection():
     client_id = os.environ.get("SPOTIFY_CLIENT_ID", "")
     client_secret = os.environ.get("SPOTIFY_CLIENT_SECRET", "")

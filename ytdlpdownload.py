@@ -13,8 +13,8 @@ environment
 source /media/shaarky/Data/Projects/Apollo/.venv/bin/activate
 
 playlist downloader
-yt-dlp -P '/media/shaarky/Data/Shaarav/music/' -o '%(title)s - %(channel)s' -x --audio-format 'mp3' \
---ffmpeg-location '/home/shaarky/.local/bin' https://www.youtube.com/playlist?list=PLIRFSUH_WlMrZhbyDNoK9o9mNW9XlPXs2
+yt-dlp -P '/media/shaarky/Data/Shaarav/my songs/new music/' -o '%(title)s - %(channel)s' -x --audio-format 'mp3' \
+--ffmpeg-location '/home/shaarky/.local/bin' https://www.youtube.com/playlist?list=PLIRFSUH_WlMpq_qEr54AstRrR_l9ilj_A
 
 video download with subs
 yt-dlp --embed-subs --sub-langs "en.*" --embed-metadata --embed-thumbnail -f bestaudio+bestvideo --merge-output-format mp4 "https://youtu.be/-rDTRuCOs9g"

@@ -4,6 +4,13 @@ from pytube import YouTube
 import os
 from ffmpy import FFmpeg
 
+# Load local API credentials from .env (gitignored)
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 
 api_key = os.environ.get("YOUTUBE_API_KEY", "")
 youtube = build('youtube','v3',developerKey=api_key)

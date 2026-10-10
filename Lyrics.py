@@ -4,11 +4,18 @@ import os
 import tempfile
 import subprocess
 
+# Load local API credentials from .env (gitignored)
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 VSCODE_PATH = "/usr/bin/code"
 PROCESSED_FILE = "/media/shaarky/Data/Projects/Apollo/processed_songs.txt"
 NO_LYRICS_FILE = "/media/shaarky/Data/Projects/Apollo/processed - no lyrics.txt"
 UNFOUND_FILE = "/media/shaarky/Data/Projects/Apollo/processed - unfound.txt"
-MUSIC_LOC = '/media/shaarky/Data/Shaarav/new music'
+MUSIC_LOC = '/media/shaarky/Data/Shaarav/my songs'
 
 # ------------------ checkpoint helpers ------------------
 
@@ -96,16 +103,21 @@ def get_existing_lyrics(songfile):
 
 
 
+def iter_mp3_files(loc):
+    """Yield (full_path, filename) for every .mp3 under loc, recursively."""
+    for root, _dirs, files in os.walk(loc):
+        for filename in files:
+            if filename.lower().endswith(".mp3"):
+                yield os.path.join(root, filename), filename
+
+
 def update_songs(genius_obj):
     loc = MUSIC_LOC
     errors = []
 
     processed = load_processed()
 
-    for filename in os.listdir(loc):
-        if not filename.endswith(".mp3"):
-            continue
-
+    for path, filename in iter_mp3_files(loc):
         if filename in processed:
             print(f"Skipping (already processed): {filename}")
             continue
@@ -114,7 +126,6 @@ def update_songs(genius_obj):
         print(f"Processing: {song_name}")
 
         try:
-            path = os.path.join(loc, filename)
             songfile = eyed3.load(path)
 
             if songfile.tag is None:
@@ -171,10 +182,7 @@ def update_songs_with_markers(genius_obj):
     no_lyrics = load_list(NO_LYRICS_FILE)
     unfound = load_list(UNFOUND_FILE)
 
-    for filename in os.listdir(loc):
-        if not filename.endswith(".mp3"):
-            continue
-
+    for path, filename in iter_mp3_files(loc):
         if filename in processed or filename in no_lyrics or filename in unfound:
             print(f"Skipping (already handled): {filename}")
             continue
@@ -183,7 +191,6 @@ def update_songs_with_markers(genius_obj):
         print(f"Processing: {song_name}")
 
         try:
-            path = os.path.join(loc, filename)
             songfile = eyed3.load(path)
 
             if songfile.tag is None:

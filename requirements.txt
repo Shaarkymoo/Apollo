@@ -12,3 +12,4 @@ youtube_search
 yt-dlp
 click
 pillow
+python-dotenv
